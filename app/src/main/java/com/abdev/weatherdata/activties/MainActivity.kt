@@ -1,7 +1,8 @@
-package com.abdev.weatherdata
+package com.abdev.weatherdata.activties
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.abdev.weatherdata.R
 
 class MainActivity : AppCompatActivity() {
 
