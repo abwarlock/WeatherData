@@ -3,28 +3,36 @@ package com.abdev.weatherdata.activties
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.abdev.weatherdata.R
-import com.abdev.weatherdata.data.models.WeatherData
-import com.abdev.weatherdata.networking.service.WeatherService
-import com.abdev.weatherdata.networking.utils.NetworkUtils
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.abdev.weatherdata.workers.FetchDataWorker
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val instance = WorkManager.getInstance()
 
-        NetworkUtils.createService(WeatherService::class.java).getWeatherData("Rainfall", "England").enqueue(object :
-            Callback<ArrayList<WeatherData>> {
-            override fun onFailure(call: Call<ArrayList<WeatherData>>, t: Throwable) {
-                Log.d("", "")
+        val workInfosByTag = instance.getWorkInfosByTagLiveData("A")
+        workInfosByTag.observe(this, Observer<MutableList<WorkInfo>> { listOfWorkInfos ->
+            if (listOfWorkInfos == null || listOfWorkInfos.isEmpty()) {
+                return@Observer
             }
-            override fun onResponse(call: Call<ArrayList<WeatherData>>, response: Response<ArrayList<WeatherData>>) {
+            val workInfo = listOfWorkInfos[0]
+
+            val finished = workInfo.state.isFinished
+            if (finished) {
                 Log.d("", "")
             }
         })
+
+        val build = OneTimeWorkRequest.Builder(FetchDataWorker::class.java).addTag("A").build()
+        instance.enqueue(build)
+
+
     }
 }
