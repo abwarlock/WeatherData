@@ -1,6 +1,7 @@
 package com.abdev.weatherdata.activties
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.abdev.weatherdata.R
 import com.abdev.weatherdata.data.models.WeatherData
@@ -21,7 +22,6 @@ class MainActivity : AppCompatActivity() {
             override fun onFailure(call: Call<ArrayList<WeatherData>>, t: Throwable) {
                 Log.d("", "")
             }
-
             override fun onResponse(call: Call<ArrayList<WeatherData>>, response: Response<ArrayList<WeatherData>>) {
                 Log.d("", "")
             }
