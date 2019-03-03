@@ -10,11 +10,14 @@ import androidx.viewpager.widget.ViewPager
 import com.abdev.weatherdata.R
 import com.abdev.weatherdata.adapters.TabPageAdapter
 import com.abdev.weatherdata.data.DataFactory
+import com.abdev.weatherdata.data.models.CityData
+import com.abdev.weatherdata.fragments.CityDataListDialogFragment
 import com.abdev.weatherdata.fragments.WeatherListFragment
 import com.abdev.weatherdata.utils.AppConstants
 import com.google.android.material.tabs.TabLayout
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CityDataListDialogFragment.Listener {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +30,8 @@ class MainActivity : AppCompatActivity() {
         adapter.addFragment(WeatherListFragment.newInstance(AppConstants.METRIC_RAINFALL), getString(R.string.RAINFALL))
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
+        val city = DataFactory.getInstance(this).cityDataDao.getSelectedCity(true)
+        title = "${city?.cityName} ${getString(R.string.WEATHER)} "
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -41,9 +46,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
         R.id.action_change_city -> {
-            DataFactory.getInstance(this).cityDataDao.updateData("UK")
+            CityDataListDialogFragment.newInstance().show(supportFragmentManager, "TAG")
             true
         }
         else -> super.onOptionsItemSelected(item)
+    }
+
+    override fun onCityDataClicked(cityData: CityData) {
+        title = "${cityData.cityName} ${getString(R.string.WEATHER)} "
+        DataFactory.getInstance(this).cityDataDao.updateData(cityData.cityName)
     }
 }

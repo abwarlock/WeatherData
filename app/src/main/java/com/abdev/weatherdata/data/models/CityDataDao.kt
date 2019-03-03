@@ -18,6 +18,9 @@ interface CityDataDao {
     @Query("SELECT * FROM cityData WHERE isSelected =:isSelected")
     fun getSelectedCity(isSelected: Boolean): CityData
 
+    @Query("SELECT * FROM cityData")
+    fun getAllCities(): List<CityData>
+
     @Query("SELECT * FROM cityData WHERE isSelected =:isSelected")
     fun getSelectedCityLiveData(isSelected: Boolean): LiveData<CityData>
 

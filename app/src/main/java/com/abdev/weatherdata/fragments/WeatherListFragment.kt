@@ -1,7 +1,6 @@
 package com.abdev.weatherdata.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,10 @@ import com.abdev.weatherdata.workers.FetchDataWorker
 import com.abdev.weatherdata.workers.WEATHER_TYPE
 
 
-class WeatherListFragment : Fragment() {
+class WeatherListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+    override fun onRefresh() {
+        fetchData()
+    }
 
     val TYPE_ARG = "TYPE_KEY"
     private var typeParam: Int? = null
@@ -63,12 +65,10 @@ class WeatherListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_weather_list, container, false)
         swipeRefreshLayout = rootView.findViewById(R.id.swipeRefreshLayout)
-        swipeRefreshLayout?.isEnabled = false
+        swipeRefreshLayout?.setOnRefreshListener(this)
         recyclerView = rootView.findViewById(R.id.recyclerView)
         return rootView
     }
-
-
 
     private fun fetchData() {
         val instance = WorkManager.getInstance()
@@ -80,9 +80,7 @@ class WeatherListFragment : Fragment() {
             val workInfo = listOfWorkInfo[0]
 
             val finished = workInfo.state.isFinished
-            if (finished) {
-                Log.d("", "")
-            }
+            swipeRefreshLayout?.isRefreshing = !finished
         })
         val build = OneTimeWorkRequest.Builder(FetchDataWorker::class.java)
             .setInputData(Data.Builder().apply {
