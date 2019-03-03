@@ -4,7 +4,7 @@ import androidx.annotation.NonNull
 import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "weatherdata", primaryKeys = ["year", "month", "metricType"])
+@Entity(tableName = "weatherdata", primaryKeys = ["year", "month", "metricType", "cityName"])
 class WeatherData {
 
     @SerializedName("value")
@@ -21,4 +21,8 @@ class WeatherData {
     @NonNull
     @SerializedName("metricType")
     var metricType: Int? = -1
+
+    @NonNull
+    @SerializedName("cityName")
+    var cityName: String? = ""
 }

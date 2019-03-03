@@ -43,8 +43,9 @@ class WeatherDataAdapter(
         holder.metricImg?.setImageResource(
             when (typeParam) {
                 AppConstants.METRIC_RAINFALL -> R.drawable.ic_rainfall
-                AppConstants.METRIC_MXN_TEMP -> R.drawable.ic_rainfall
-                else -> android.R.drawable.ic_input_add
+                AppConstants.METRIC_MXN_TEMP -> R.drawable.ic_max_temp
+                AppConstants.METRIC_MIN_TEMP -> R.drawable.ic_min_temp
+                else -> R.drawable.ic_min_temp
             }
         )
     }

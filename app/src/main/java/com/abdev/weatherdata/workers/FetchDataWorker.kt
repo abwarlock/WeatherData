@@ -14,15 +14,17 @@ class FetchDataWorker(var context: Context, workerParams: WorkerParameters) : Wo
 
     override fun doWork(): Result {
         val type = inputData.getInt(WEATHER_TYPE, -1)
+        val cityName = getCityName()
         return if (type != -1) {
             val weatherData =
-                NetworkUtils.createService(WeatherService::class.java).getWeatherData(getMetricValue(type), "England")
+                NetworkUtils.createService(WeatherService::class.java).getWeatherData(getMetricValue(type), cityName)
             try {
                 val execute = weatherData.execute()
                 val dataList = execute.body()
                 dataList?.let { list ->
                     list.forEach { model ->
                         model.metricType = type
+                        model.cityName = cityName
                     }
                     DataFactory.getInstance(context).weatherDao.insertAll(list)
                 }
@@ -41,5 +43,10 @@ class FetchDataWorker(var context: Context, workerParams: WorkerParameters) : Wo
             AppConstants.METRIC_MIN_TEMP -> "Tmin"
             else -> "Rainfall"
         }
+    }
+
+    private fun getCityName(): String {
+        val cityData = DataFactory.getInstance(context).cityDataDao.getSelectedCity(true)
+        return cityData.cityName
     }
 }

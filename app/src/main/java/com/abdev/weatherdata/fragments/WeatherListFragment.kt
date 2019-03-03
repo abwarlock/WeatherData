@@ -1,6 +1,5 @@
 package com.abdev.weatherdata.fragments
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,7 +23,7 @@ import com.abdev.weatherdata.workers.FetchDataWorker
 import com.abdev.weatherdata.workers.WEATHER_TYPE
 
 
-class WeatherListFragment : Fragment(), SharedPreferences.OnSharedPreferenceChangeListener {
+class WeatherListFragment : Fragment() {
 
     val TYPE_ARG = "TYPE_KEY"
     private var typeParam: Int? = null
@@ -73,11 +72,11 @@ class WeatherListFragment : Fragment(), SharedPreferences.OnSharedPreferenceChan
     private fun fetchData() {
         val instance = WorkManager.getInstance()
         val workInfoByTag = instance.getWorkInfosByTagLiveData(typeParam.toString())
-        workInfoByTag.observe(this, Observer<MutableList<WorkInfo>> { listOfWorkInfos ->
-            if (listOfWorkInfos == null || listOfWorkInfos.isEmpty()) {
+        workInfoByTag.observe(this, Observer<MutableList<WorkInfo>> { listOfWorkInfo ->
+            if (listOfWorkInfo == null || listOfWorkInfo.isEmpty()) {
                 return@Observer
             }
-            val workInfo = listOfWorkInfos[0]
+            val workInfo = listOfWorkInfo[0]
 
             val finished = workInfo.state.isFinished
             if (finished) {
@@ -97,17 +96,10 @@ class WeatherListFragment : Fragment(), SharedPreferences.OnSharedPreferenceChan
 
     override fun onResume() {
         super.onResume()
-        //val sharedPreferences = context?.getSharedPreferences("APP", MODE_PRIVATE)
-        //sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
         ViewModelProviders.of(this)
             .get(WeatherViewModel::class.java)
             .getListOfModels(typeParam!!)
             .observe(this, observer)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        //context?.getSharedPreferences("APP", MODE_PRIVATE)?.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     private fun setAdapter(weatherDatList: List<WeatherData>) {
@@ -115,9 +107,6 @@ class WeatherListFragment : Fragment(), SharedPreferences.OnSharedPreferenceChan
         recyclerView?.adapter = dataAdapter
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        Log.d("", "")
-    }
 
 
 }
