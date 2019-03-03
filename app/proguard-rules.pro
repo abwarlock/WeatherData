@@ -19,3 +19,38 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+
+
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+
+-keep class com.squareup.okhttp.** { *; }
+-keep class retrofit.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+
+-keep class com.squareup.okhttp3.** { *; }
+-keep class retrofit2.** { *; }
+-keep interface com.squareup.okhttp3.** { *; }
+
+-keepclasseswithmembers class * {
+    @retrofit.http.* <methods>;
+}
+
+-keepattributes Exceptions
+
+-keepattributes Signature
+
+-dontwarn com.squareup.okhttp.**
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn retrofit.**
+-dontwarn com.squareup.retrofit2.**
+-dontwarn android.**
+-dontwarn com.google.**
+-dontwarn org.apache.**
+-dontwarn com.google.android.gms.internal.**
+-dontwarn dalvik.system.**
+-dontwarn javax.annotation.**
