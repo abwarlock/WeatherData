@@ -6,11 +6,14 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.abdev.weatherdata.R
 import com.abdev.weatherdata.adapters.TabPageAdapter
 import com.abdev.weatherdata.data.DataFactory
 import com.abdev.weatherdata.data.models.CityData
+import com.abdev.weatherdata.data.viewmodel.AppViewModel
 import com.abdev.weatherdata.fragments.CityDataListDialogFragment
 import com.abdev.weatherdata.fragments.WeatherListFragment
 import com.abdev.weatherdata.utils.AppConstants
@@ -31,7 +34,32 @@ class MainActivity : AppCompatActivity(), CityDataListDialogFragment.Listener {
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
         val city = DataFactory.getInstance(this).cityDataDao.getSelectedCity(true)
-        title = "${city?.cityName} ${getString(R.string.WEATHER)} "
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ViewModelProviders.of(this)
+            .get(AppViewModel::class.java)
+            .getSelectedCity()
+            .observe(this, cityObserver)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        ViewModelProviders.of(this)
+            .get(AppViewModel::class.java)
+            .getSelectedCity()
+            .removeObservers(this)
+    }
+
+    private val cityObserver = Observer<CityData> { cityData ->
+        cityData?.let {
+            title = if (cityData.isSelected) {
+                "${cityData.cityName} ${getString(R.string.WEATHER)} "
+            } else {
+                getString(R.string.WEATHER)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

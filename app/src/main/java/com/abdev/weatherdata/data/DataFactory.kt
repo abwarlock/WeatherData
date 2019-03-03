@@ -30,8 +30,8 @@ abstract class DataFactory : RoomDatabase() {
                             Executors.newSingleThreadScheduledExecutor().execute {
                                 getInstance(context).cityDataDao.insertAll(ArrayList<CityData>().apply {
                                     add(CityData("UK", false))
-                                    add(CityData("England", false))
-                                    add(CityData("Scotland", true))
+                                    add(CityData("England", true))
+                                    add(CityData("Scotland", false))
                                     add(CityData("Wales", false))
                                 })
                             }
