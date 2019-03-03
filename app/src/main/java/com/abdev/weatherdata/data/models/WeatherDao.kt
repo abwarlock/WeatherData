@@ -18,8 +18,11 @@ interface WeatherDao {
     @Query("SELECT * from weatherdata")
     fun getLiveDataList(): LiveData<List<WeatherData>>
 
-    @Query("SELECT * from weatherdata WHERE metricType =:metricType")
-    fun getLiveDataList(metricType: Int): LiveData<List<WeatherData>>
+    @Query("SELECT * from weatherdata WHERE metricType =:metricType AND cityName =:cityName")
+    fun getLiveDataList(metricType: Int, cityName: String): LiveData<List<WeatherData>>
+
+    @Query("SELECT * from weatherdata WHERE metricType =:metricType AND cityName = (SELECT cityName FROM CITYDATA WHERE isSelected= :isSelected)")
+    fun getLiveDataListWithSelectedCity(metricType: Int, isSelected: Boolean = true): LiveData<List<WeatherData>>
 
     /*@Query("SELECT * from weatherdata")
     fun getPageDataList(): DataSource.Factory<WeatherData, Int>*/

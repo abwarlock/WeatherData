@@ -16,8 +16,9 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.abdev.weatherdata.R
 import com.abdev.weatherdata.adapters.WeatherDataAdapter
+import com.abdev.weatherdata.data.models.CityData
 import com.abdev.weatherdata.data.models.WeatherData
-import com.abdev.weatherdata.data.viewmodel.WeatherViewModel
+import com.abdev.weatherdata.data.viewmodel.AppViewModel
 import com.abdev.weatherdata.utils.AppConstants
 import com.abdev.weatherdata.workers.FetchDataWorker
 import com.abdev.weatherdata.workers.WEATHER_TYPE
@@ -44,9 +45,15 @@ class WeatherListFragment : Fragment() {
         }
     }
 
-    private val observer = Observer<List<WeatherData>> { weatherDatList ->
+    private val weatherObserver = Observer<List<WeatherData>> { weatherDatList ->
         weatherDatList?.let {
             setAdapter(weatherDatList)
+        }
+    }
+
+    private val cityObserver = Observer<CityData> { cityData ->
+        cityData?.let {
+            fetchData()
         }
     }
 
@@ -61,12 +68,6 @@ class WeatherListFragment : Fragment() {
         return rootView
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (savedInstanceState == null) {
-            fetchData()
-        }
-    }
 
 
     private fun fetchData() {
@@ -97,9 +98,27 @@ class WeatherListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         ViewModelProviders.of(this)
-            .get(WeatherViewModel::class.java)
+            .get(AppViewModel::class.java)
             .getListOfModels(typeParam!!)
-            .observe(this, observer)
+            .observe(this, weatherObserver)
+
+        ViewModelProviders.of(this)
+            .get(AppViewModel::class.java)
+            .getSelectedCity()
+            .observe(this, cityObserver)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        ViewModelProviders.of(this)
+            .get(AppViewModel::class.java)
+            .getListOfModels(typeParam!!)
+            .removeObservers(this)
+
+        ViewModelProviders.of(this)
+            .get(AppViewModel::class.java)
+            .getSelectedCity()
+            .removeObservers(this)
     }
 
     private fun setAdapter(weatherDatList: List<WeatherData>) {

@@ -2,12 +2,14 @@ package com.abdev.weatherdata.activties
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.viewpager.widget.ViewPager
 import com.abdev.weatherdata.R
 import com.abdev.weatherdata.adapters.TabPageAdapter
+import com.abdev.weatherdata.data.DataFactory
 import com.abdev.weatherdata.fragments.WeatherListFragment
 import com.abdev.weatherdata.utils.AppConstants
 import com.google.android.material.tabs.TabLayout
@@ -35,5 +37,13 @@ class MainActivity : AppCompatActivity() {
         DrawableCompat.setTint(drawable, ContextCompat.getColor(this, R.color.white));
         menu.findItem(R.id.action_change_city).icon = drawable;
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
+        R.id.action_change_city -> {
+            DataFactory.getInstance(this).cityDataDao.updateData("UK")
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 }

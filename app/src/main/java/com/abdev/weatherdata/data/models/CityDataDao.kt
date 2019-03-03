@@ -1,5 +1,6 @@
 package com.abdev.weatherdata.data.models
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
@@ -16,6 +17,9 @@ interface CityDataDao {
 
     @Query("SELECT * FROM cityData WHERE isSelected =:isSelected")
     fun getSelectedCity(isSelected: Boolean): CityData
+
+    @Query("SELECT * FROM cityData WHERE isSelected =:isSelected")
+    fun getSelectedCityLiveData(isSelected: Boolean): LiveData<CityData>
 
     @Transaction
     open fun updateData(cityName: String) {
