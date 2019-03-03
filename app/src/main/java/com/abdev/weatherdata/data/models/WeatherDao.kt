@@ -1,7 +1,6 @@
 package com.abdev.weatherdata.data.models
 
 import androidx.lifecycle.LiveData
-import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -19,7 +18,10 @@ interface WeatherDao {
     @Query("SELECT * from weatherdata")
     fun getLiveDataList(): LiveData<List<WeatherData>>
 
-    @Query("SELECT * from weatherdata")
-    fun getPageDataList(): DataSource.Factory<WeatherData, Int>
+    @Query("SELECT * from weatherdata WHERE metricType =:metricType")
+    fun getLiveDataList(metricType: Int): LiveData<List<WeatherData>>
+
+    /*@Query("SELECT * from weatherdata")
+    fun getPageDataList(): DataSource.Factory<WeatherData, Int>*/
 
 }

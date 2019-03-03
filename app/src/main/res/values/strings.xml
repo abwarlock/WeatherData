@@ -3,4 +3,5 @@
     <string name="RAINFALL">Rainfall</string>
     <string name="MIN_TEMP">Min Temp</string>
     <string name="MAX_TEMP">Max Temp</string>
+    <string name="CITY">City</string>
 </resources>

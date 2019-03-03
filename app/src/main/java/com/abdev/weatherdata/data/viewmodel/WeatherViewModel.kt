@@ -6,7 +6,8 @@ import com.abdev.weatherdata.data.DataFactory
 
 class WeatherViewModel : ViewModel() {
 
-    fun getListOfModels() = DataFactory.getInstance(MyApplication.getContext()).weatherDao.getLiveDataList()
+    fun getListOfModels(typeParam: Int) =
+        DataFactory.getInstance(MyApplication.getContext()).weatherDao.getLiveDataList(typeParam)
 
     fun getListOfPageModels() = DataFactory.getInstance(MyApplication.getContext()).weatherDao.getLiveDataList()
 }

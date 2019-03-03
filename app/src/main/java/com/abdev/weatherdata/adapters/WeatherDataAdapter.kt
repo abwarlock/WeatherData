@@ -10,11 +10,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.abdev.weatherdata.R
 import com.abdev.weatherdata.data.models.WeatherData
+import com.abdev.weatherdata.utils.AppConstants
 import java.text.DateFormatSymbols
 import java.util.*
 
-class WeatherDataAdapter(var modelList: ArrayList<WeatherData>, var context: Context) :
-    RecyclerView.Adapter<WeatherDataAdapter.ViewHolder>() {
+class WeatherDataAdapter(
+    var modelList: ArrayList<WeatherData>,
+    var context: Context,
+    var typeParam: Int? = 0
+) : RecyclerView.Adapter<WeatherDataAdapter.ViewHolder>() {
 
     var dateFormatSymbols: DateFormatSymbols = DateFormatSymbols.getInstance(Locale.getDefault())
 
@@ -36,7 +40,13 @@ class WeatherDataAdapter(var modelList: ArrayList<WeatherData>, var context: Con
             holder.dateValueView?.text = "N/A"
             holder.metricsValueView?.text = "N/A"
         }
-
+        holder.metricImg?.setImageResource(
+            when (typeParam) {
+                AppConstants.METRIC_RAINFALL -> R.drawable.ic_rainfall
+                AppConstants.METRIC_MXN_TEMP -> R.drawable.ic_rainfall
+                else -> android.R.drawable.ic_input_add
+            }
+        )
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
